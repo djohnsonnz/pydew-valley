@@ -1,2 +1,2 @@
-Learning Python and PyGame
+Learning Python and PyGame <br>
 Testing Conventional Commits
