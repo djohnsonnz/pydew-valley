@@ -15,6 +15,7 @@ class Level:
         # sprite groups
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
+        self.tree_sprites = pygame.sprite.Group()
 
         self.setup()
         self.overlay = Overlay(self.player)
@@ -25,24 +26,24 @@ class Level:
         # house
         for layer in ['HouseFloor', 'HouseFurnitureBottom']:
             for x, y, surface in tmx_data.get_layer_by_name(layer).tiles():
-                Generic((x * TITLE_SIZE, y * TITLE_SIZE), surface, self.all_sprites, LAYERS['house bottom'])
+                Generic((x * TILE_SIZE, y * TILE_SIZE), surface, self.all_sprites, LAYERS['house bottom'])
 
         for layer in ['HouseWalls', 'HouseFurnitureTop']:
             for x, y, surface in tmx_data.get_layer_by_name(layer).tiles():
-                Generic((x * TITLE_SIZE, y * TITLE_SIZE), surface, self.all_sprites)
+                Generic((x * TILE_SIZE, y * TILE_SIZE), surface, self.all_sprites)
 
         # fence
         for x, y, surface in tmx_data.get_layer_by_name('Fence').tiles():
-            Generic((x * TITLE_SIZE, y * TITLE_SIZE), surface, [self.all_sprites, self.collision_sprites])
+            Generic((x * TILE_SIZE, y * TILE_SIZE), surface, [self.all_sprites, self.collision_sprites])
 
         # water
         water_frames = import_folder('../graphics/water')
         for x, y, surface in tmx_data.get_layer_by_name('Water').tiles():
-            Water((x * TITLE_SIZE, y * TITLE_SIZE), water_frames, self.all_sprites)
+            Water((x * TILE_SIZE, y * TILE_SIZE), water_frames, self.all_sprites)
 
         # trees
         for obj in tmx_data.get_layer_by_name('Trees'):
-            Tree((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites], obj.name)
+            Tree((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.tree_sprites], obj.name)
 
         # wildflower
         for obj in tmx_data.get_layer_by_name('Decoration'):
@@ -50,12 +51,16 @@ class Level:
 
         # collision tiles
         for x, y, surface in tmx_data.get_layer_by_name('Collision').tiles():
-            Generic((x * TITLE_SIZE, y * TITLE_SIZE), pygame.Surface((TITLE_SIZE, TITLE_SIZE)), self.collision_sprites)
+            Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface((TILE_SIZE, TILE_SIZE)), self.collision_sprites)
 
         # player
         for obj in tmx_data.get_layer_by_name('Player'):
             if obj.name == 'Start':
-                self.player = Player((obj.x,obj.y), self.all_sprites, self.collision_sprites)
+                self.player = Player(
+                    pos = (obj.x,obj.y),
+                    group = self.all_sprites,
+                    collision_sprites = self.collision_sprites,
+                    tree_sprites = self.tree_sprites)
         Generic(
             pos = (0,0),
             surface = pygame.image.load('../graphics/world/ground.png').convert_alpha(),
@@ -85,3 +90,12 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+
+                    # # analytics
+                    # if sprite == player:
+                    #     pygame.draw.rect(self.display_surface,'red',offset_rect,5)
+                    #     hitbox_rect = player.hitbox.copy()
+                    #     hitbox_rect.center = offset_rect.center
+                    #     pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
+                    #     target_pos = offset_rect.center + PLAYER_TOOL_OFFSET[player.status.split('_')[0]]
+                    #     pygame.draw.circle(self.display_surface,'blue',target_pos,5)
