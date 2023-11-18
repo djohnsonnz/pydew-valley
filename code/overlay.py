@@ -10,17 +10,17 @@ class Overlay:
 
         # imports
         overlay_path = '../graphics/overlay/'
-        self.tools_surface = {tool: pygame.image.load(f'{overlay_path}{tool}.png').convert_alpha() for tool in player.tools}
-        self.seeds_surface = {seed: pygame.image.load(f'{overlay_path}{seed}.png').convert_alpha() for seed in player.seeds}
+        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}{tool}.png').convert_alpha() for tool in player.tools}
+        self.seeds_surf = {seed: pygame.image.load(f'{overlay_path}{seed}.png').convert_alpha() for seed in player.seeds}
 
     def display(self):
 
         # tools
-        tool_surface = self.tools_surface[self.player.selected_tool]
-        tool_rect = tool_surface.get_rect(midbottom = OVERLAY_POSITIONS['tool'])
-        self.display_surface.blit(tool_surface, tool_rect)
+        tool_surf = self.tools_surf[self.player.selected_tool]
+        tool_rect = tool_surf.get_rect(midbottom = OVERLAY_POSITIONS['tool'])
+        self.display_surface.blit(tool_surf, tool_rect)
 
         # seeds
-        seed_surface = self.seeds_surface[self.player.selected_seed]
-        seed_rect = seed_surface.get_rect(midbottom = OVERLAY_POSITIONS['seed'])
-        self.display_surface.blit(seed_surface, seed_rect)
+        seed_surf = self.seeds_surf[self.player.selected_seed]
+        seed_rect = seed_surf.get_rect(midbottom = OVERLAY_POSITIONS['seed'])
+        self.display_surface.blit(seed_surf, seed_rect)
