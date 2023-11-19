@@ -92,14 +92,14 @@ class Tree(Generic):
             Particle(
                 pos = random_apple.rect.topleft,
                 surf = random_apple.image,
-                groups = self.groups()[0],
+                groups = self.groups()[1],
                 z = LAYERS['fruit'])
             self.player_add('apple')
             random_apple.kill()
 
     def check_death(self):
         if self.health <= 0:
-            Particle(self.rect.topleft, self.image, self.groups()[0], LAYERS['fruit'], 300)
+            Particle(self.rect.topleft, self.image, self.groups()[1], LAYERS['fruit'], 300)
             self.image = self.stump_surf
             self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate(-10,-self.rect.height * 0.6)
@@ -118,5 +118,5 @@ class Tree(Generic):
                 Generic(
                     pos = (x,y),
                     surf = self.apple_surf,
-                    groups = [self.apple_sprites,self.groups()[0]],
+                    groups = [self.apple_sprites,self.groups()[1]],
                     z = LAYERS['fruit'])
